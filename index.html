@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>ระบบบันทึกรายรับ - รายจ่าย พ่อแม่มายู</title>
+  <title>ระบบบันทึก รายรับ - รายจ่าย พ่อแม่มายู</title>
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -22,6 +22,26 @@
     
     /* App UI */
     .navbar-pro { background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    
+    /* ========================================= */
+    /* ดีไซน์ป้ายชื่อผู้ใช้งานแบบลอยเด่น (Contrast) */
+    /* ========================================= */
+    .badge-contrast {
+      background-color: #ffffff; /* พื้นขาวลอยเด่น */
+      border-radius: 50px;
+      padding: 5px 14px;
+      font-weight: 700;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.25); /* เงาให้ลอยขึ้นมา */
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
+    .badge-dad { color: #0d6efd; border: 2px solid #0d6efd; } /* ขอบและตัวหนังสือสีน้ำเงิน */
+    .badge-mom { color: #dc3545; border: 2px solid #dc3545; } /* ขอบและตัวหนังสือสีแดง */
+    /* ========================================= */
+
     .menu-item { border-radius: 10px; margin: 3px 10px; font-weight: 500; border: none !important; }
     .menu-item:hover, .menu-item.active { background-color: #cfe2ff !important; color: #0d6efd !important; }
     
@@ -75,7 +95,14 @@
       <div class="container-fluid">
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu"><span class="navbar-toggler-icon"></span></button>
         <span class="navbar-brand me-auto ms-2 fw-bold" id="pageTitle">ภาพรวม (Dashboard)</span>
-        <div class="d-flex align-items-center"><span class="badge bg-light text-primary py-1 px-2 rounded-pill small" id="currentUserBadge">User</span></div>
+        
+        <div class="d-flex align-items-center">
+          <div id="currentUserBadge" class="badge-contrast badge-dad d-none">
+            <i id="userBadgeIcon" class="bi bi-person-fill"></i>
+            <span id="userBadgeText">User</span>
+          </div>
+        </div>
+
       </div>
     </nav>
 
@@ -185,7 +212,7 @@
     // วันที่ปัจจุบัน
     document.getElementById('txDate').valueAsDate = new Date();
 
-    // CORS Bypass call (เหมือนเดิม)
+    // CORS Bypass call
     async function callAPI(action, payload) {
       try {
         const response = await fetch(API_URL, {
@@ -226,17 +253,31 @@
       if(res.success) {
         document.getElementById('login-section').classList.add('d-none');
         document.getElementById('app-section').classList.remove('d-none');
-        document.getElementById('currentUserBadge').textContent = currentUser;
-        // เปลี่ยนสี Badge ตามคน
-        document.getElementById('currentUserBadge').className = `badge rounded-pill small py-1 px-2 ${currentUser==='พ่อมายู'?'bg-dad text-dad':'bg-mom text-mom'}`;
-        initApp(); // โหลดข้อมูลทั้งหมด
+        
+        // อัปเดตป้ายชื่อ User ให้ลอยเด่นตามที่แก้ใหม่
+        const badgeObj = document.getElementById('currentUserBadge');
+        const badgeIcon = document.getElementById('userBadgeIcon');
+        const badgeText = document.getElementById('userBadgeText');
+        
+        badgeText.textContent = currentUser;
+        badgeObj.classList.remove('d-none'); // แสดงป้ายชื่อ
+        
+        if (currentUser === 'พ่อมายู') {
+          badgeObj.className = 'badge-contrast badge-dad';
+          badgeIcon.className = 'bi bi-person-standing';
+        } else {
+          badgeObj.className = 'badge-contrast badge-mom';
+          badgeIcon.className = 'bi bi-person-standing-dress';
+        }
+
+        initApp(); 
       } else {
         const alertBox = document.getElementById('loginAlert');
         alertBox.textContent = res.message; alertBox.classList.remove('d-none');
       }
     }
 
-    function logout() { location.reload(); } // วิธี Reset ง่ายที่สุด
+    function logout() { location.reload(); }
 
     // 2. ระบบสลับหน้า SPA
     function switchPage(page, el) {
@@ -251,7 +292,7 @@
       if(page === 'dashboard') {
         document.getElementById('pageTitle').textContent = 'ภาพรวมครอบครัว';
         document.getElementById('page-dashboard').classList.remove('d-none');
-        updateDashboardView(); // ใช้วาดกราฟใหม่
+        updateDashboardView();
       } else if (page === 'form') {
         document.getElementById('pageTitle').textContent = 'บันทึกรายการ';
         document.getElementById('page-form').classList.remove('d-none');
@@ -261,7 +302,7 @@
       }
     }
 
-    // 3. เริ่มต้น App (โหลดหมวดหมู่และ Dashboard)
+    // 3. เริ่มต้น App
     async function initApp() {
       toggleLoading(show=true);
       const res = await callAPI("getAppData", {});
@@ -269,13 +310,13 @@
       if(res.success) {
         categoriesData = res.categories;
         dashboardDataCache = res.dashboard;
-        renderCategoryTable(); // วาดตารางตั้งค่า
-        updateDashboardView(); // วาด Dashboard
+        renderCategoryTable();
+        updateDashboardView();
       }
     }
 
     // ==========================================
-    // Dashboard & Chart (สมบูรณ์)
+    // Dashboard & Chart
     // ==========================================
     function updateDashboardView() {
       const view = document.getElementById('viewToggle').value;
@@ -283,16 +324,13 @@
       
       if(!data) return;
 
-      // อัปเดตตัวเลขการ์ด
       document.getElementById('dashIncome').textContent = data.income.toLocaleString();
       document.getElementById('dashExpense').textContent = data.expense.toLocaleString();
       document.getElementById('dashBalance').textContent = data.balance.toLocaleString();
       document.getElementById('dashTransfer').textContent = data.transfer.toLocaleString();
       
-      // อัปเดตสีคงเหลือ
       document.getElementById('dashBalance').className = `fw-bold mb-0 ${data.balance >= 0 ? 'text-primary' : 'text-danger'}`;
 
-      // วาดกราฟแนวโน้ม (Bar)
       const ctxTrend = document.getElementById('trendChart').getContext('2d');
       if(trendChartInstance) trendChartInstance.destroy();
       trendChartInstance = new Chart(ctxTrend, {
@@ -334,7 +372,6 @@
       } else { subCategoryDiv.classList.add('d-none'); }
     }
 
-    // ส่งฟอร์มบันทึก
     document.getElementById('transactionForm').addEventListener('submit', async function(e) {
       e.preventDefault(); 
       const btn = document.getElementById('btnSubmitForm');
@@ -346,7 +383,7 @@
         date: document.getElementById('txDate').value, type: document.getElementById('txType').value,
         category: document.getElementById('txCategory').value, subCategory: document.getElementById('txSubCategory').value || '',
         amount: document.getElementById('txAmount').value, note: document.getElementById('txNote').value || '',
-        user: currentUser // บันทึกชื่อผู้ทำรายการ
+        user: currentUser
       };
 
       const res = await callAPI("addTransaction", payload);
@@ -359,13 +396,12 @@
         document.getElementById('txAmount').value = ''; document.getElementById('txNote').value = '';
         setTimeout(() => alertBox.classList.add('d-none'), 3000);
         
-        // อัปเดต Dashboard เงียบๆ หลังบ้าน
         callAPI("getDashboard", {}).then(r => { if(r.success) { dashboardDataCache = r.data; updateDashboardView(); }});
       }
     });
 
     // ==========================================
-    // Manage Categories (Dynamic) เหมือนไฟล์เดิม
+    // Manage Categories (Dynamic)
     // ==========================================
     function renderCategoryTable() {
       let tbody = '';
