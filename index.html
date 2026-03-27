@@ -3,202 +3,210 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>ระบบบันทึก รายรับ - รายจ่าย พ่อแม่มายู</title>
+  <title>Family Finance Pro | Enterprise Dashboard</title>
   
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600&display=swap');
-    body { background-color: #f0f2f5; font-family: 'Sarabun', sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+    body { background-color: #f4f7f6; font-family: 'Sarabun', sans-serif; color: #333; overflow-x: hidden; }
     
-    /* Login Section */
-    #login-section { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); }
-    .login-card { width: 100%; max-width: 400px; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); border: none; background: rgba(255,255,255,0.95); backdrop-filter: blur(5px); }
-    .profile-btn { text-align: center; cursor: pointer; border-radius: 15px; padding: 15px; transition: 0.2s; border: 3px solid transparent; width: 100%; }
-    .profile-btn:hover, .profile-btn.active { background-color: #e9ecef; border-color: #0d6efd; transform: translateY(-3px); }
-    .icon-avatar { font-size: 3rem; margin-bottom: 10px; }
-    .text-dad { color: #004a99; } .text-mom { color: #a31d2a; }
+    /* Login Screen */
+    #login-section { height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); }
+    .login-card { width: 100%; max-width: 420px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: none; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); }
+    .profile-btn { text-align: center; cursor: pointer; border-radius: 16px; padding: 20px 10px; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); border: 2px solid transparent; background: #f8f9fa; }
+    .profile-btn:hover, .profile-btn.active { background-color: #fff; border-color: #0d6efd; transform: translateY(-5px); box-shadow: 0 10px 20px rgba(13, 110, 253, 0.15); }
+    .text-dad { color: #0056b3; } .text-mom { color: #c82333; }
     
-    /* App UI */
-    .navbar-pro { background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    /* Admin Dashboard Layout */
+    .admin-wrapper { display: flex; width: 100%; align-items: stretch; min-height: 100vh; }
     
-    /* ========================================= */
-    /* ดีไซน์ป้ายชื่อผู้ใช้งานแบบลอยเด่น (Contrast) */
-    /* ========================================= */
-    .badge-contrast {
-      background-color: #ffffff; /* พื้นขาวลอยเด่น */
-      border-radius: 50px;
-      padding: 5px 14px;
-      font-weight: 700;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.25); /* เงาให้ลอยขึ้นมา */
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
-      transition: all 0.3s ease;
-    }
-    .badge-dad { color: #0d6efd; border: 2px solid #0d6efd; } /* ขอบและตัวหนังสือสีน้ำเงิน */
-    .badge-mom { color: #dc3545; border: 2px solid #dc3545; } /* ขอบและตัวหนังสือสีแดง */
-    /* ========================================= */
+    /* Sidebar */
+    .sidebar { min-width: 250px; max-width: 250px; background: #ffffff; color: #333; transition: all 0.3s; border-right: 1px solid #eef0f3; z-index: 1040; display: flex; flex-direction: column; }
+    .sidebar-header { padding: 20px; font-weight: 700; font-size: 1.2rem; color: #0d6efd; border-bottom: 1px solid #eef0f3; display: flex; align-items: center; gap: 10px; }
+    .sidebar-menu { padding: 15px 10px; list-style: none; margin: 0; flex-grow: 1; }
+    .sidebar-menu li { margin-bottom: 5px; }
+    .sidebar-menu a { padding: 12px 15px; display: flex; align-items: center; color: #555; text-decoration: none; border-radius: 10px; font-weight: 500; transition: all 0.2s; }
+    .sidebar-menu a i { margin-right: 12px; font-size: 1.2rem; }
+    .sidebar-menu a:hover, .sidebar-menu a.active { background: #eff4fd; color: #0d6efd; }
+    .sidebar-footer { padding: 20px; border-top: 1px solid #eef0f3; }
+    
+    /* Main Content */
+    .main-content { width: 100%; padding: 0; background: #f4f7f6; min-height: 100vh; display: flex; flex-direction: column; }
+    .topbar { background: #fff; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+    .content-fluid { padding: 25px 30px; flex-grow: 1; }
+    
+    /* Cards & Utilities */
+    .card-ent { border: none; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); background: #fff; transition: transform 0.2s; margin-bottom: 24px; }
+    .icon-box-ent { width: 54px; height: 54px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; }
+    .bg-light-success { background: #e8f5e9; color: #2e7d32; }
+    .bg-light-danger { background: #ffebee; color: #c62828; }
+    .bg-light-primary { background: #e3f2fd; color: #1565c0; }
+    .bg-light-info { background: #e0f7fa; color: #00838f; }
 
-    .menu-item { border-radius: 10px; margin: 3px 10px; font-weight: 500; border: none !important; }
-    .menu-item:hover, .menu-item.active { background-color: #cfe2ff !important; color: #0d6efd !important; }
+    /* Mobile handling */
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; left: -250px; height: 100vh; }
+      .sidebar.active { left: 0; box-shadow: 5px 0 20px rgba(0,0,0,0.1); }
+      .content-fluid { padding: 15px; }
+      .topbar { padding: 15px; }
+    }
     
-    .card-modern { border-radius: 18px; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.05); background: #fff; }
-    .icon-box-lg { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
-    .bg-soft-success { background-color: #d1e7dd; color: #0f5132; }
-    .bg-soft-danger { background-color: #f8d7da; color: #842029; }
-    .bg-soft-primary { background-color: #cfe2ff; color: #084298; }
+    .badge-user { padding: 6px 16px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.08); display: inline-flex; align-items: center; gap: 8px; background: #fff; }
+    .badge-dad { color: #0d6efd; border: 1.5px solid #0d6efd; }
+    .badge-mom { color: #dc3545; border: 1.5px solid #dc3545; }
     
-    .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+    .table-ent th { border-top: none; color: #888; font-weight: 600; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; padding-bottom: 12px; }
+    .table-ent td { vertical-align: middle; color: #444; font-weight: 500; border-bottom: 1px solid #f1f1f1; }
+    
+    .loading-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.85); display:flex; justify-content:center; align-items:center; z-index:9999; backdrop-filter: blur(3px); }
     .d-none { display: none !important; }
   </style>
 </head>
 <body>
 
   <div id="loadingOverlay" class="loading-overlay d-none">
-    <div class="text-center"><div class="spinner-border text-primary" role="status"></div><br><span class="text-muted small mt-2">กำลังซิงค์ข้อมูล...</span></div>
+    <div class="text-center"><div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div><h6 class="mt-3 fw-bold text-secondary">กำลังซิงค์ข้อมูล...</h6></div>
   </div>
 
   <div id="login-section">
     <div class="card login-card p-4 mx-3">
       <div class="text-center mb-4">
-        <h4 class="mt-2 fw-bold text-dark"><i class="bi bi-wallet2 text-primary"></i> Mayu Family Finance Pro</h4>
-        <p class="text-muted small mb-0">ยินดีต้อนรับ! กรุณาเลือกผู้ใช้งาน</p>
+        <h3 class="fw-bold text-dark"><i class="bi bi-shield-check text-primary me-2"></i>Finance Pro</h3>
+        <p class="text-muted small">ระบบจัดการการเงินครอบครัวระดับองค์กร</p>
       </div>
-      
       <div class="row gx-3 mb-4">
-        <div class="col-6">
-          <div class="profile-btn bg-light" id="btnDad" onclick="selectUser('พ่อมายู')">
-            <i class="bi bi-person-standing icon-avatar text-dad"></i><h6 class="fw-bold mb-0 text-dad">พ่อมายู</h6>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="profile-btn bg-light" id="btnMom" onclick="selectUser('แม่มายู')">
-            <i class="bi bi-person-standing-dress icon-avatar text-mom"></i><h6 class="fw-bold mb-0 text-mom">แม่มายู</h6>
-          </div>
-        </div>
+        <div class="col-6"><div class="profile-btn" id="btnDad" onclick="selectUser('พ่อมายู')"><i class="bi bi-person-bounding-box icon-avatar text-dad"></i><h6 class="fw-bold mb-0 text-dad">พ่อมายู</h6></div></div>
+        <div class="col-6"><div class="profile-btn" id="btnMom" onclick="selectUser('แม่มายู')"><i class="bi bi-person-bounding-box icon-avatar text-mom"></i><h6 class="fw-bold mb-0 text-mom">แม่มายู</h6></div></div>
       </div>
-      
       <div id="pin-section" class="d-none">
-        <input type="password" id="pinInput" class="form-control form-control-lg text-center fw-bold mb-3 bg-light border-0" placeholder="ใส่ PIN 4 หลัก" maxlength="4" style="letter-spacing: 0.5rem;" onkeypress="if(event.key==='Enter') doLogin()">
-        <button id="btnLogin" class="btn btn-primary btn-lg w-100 fw-bold" onclick="doLogin()">เข้าสู่ระบบ</button>
-        <div id="loginAlert" class="alert alert-danger mt-3 d-none text-center small py-2"></div>
+        <input type="password" id="pinInput" class="form-control form-control-lg text-center fw-bold mb-3 bg-light border-0" placeholder="••••" maxlength="4" style="letter-spacing: 1rem; font-size: 1.5rem;" onkeypress="if(event.key==='Enter') doLogin()">
+        <button id="btnLogin" class="btn btn-primary btn-lg w-100 fw-bold rounded-pill" onclick="doLogin()">เข้าสู่ระบบ</button>
+        <div id="loginAlert" class="alert alert-danger mt-3 d-none text-center small rounded-pill"></div>
       </div>
     </div>
   </div>
 
-  <div id="app-section" class="d-none">
+  <div id="app-section" class="admin-wrapper d-none">
     
-    <nav class="navbar navbar-dark navbar-pro sticky-top">
-      <div class="container-fluid">
-        <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu"><span class="navbar-toggler-icon"></span></button>
-        <span class="navbar-brand me-auto ms-2 fw-bold" id="pageTitle">ภาพรวม (Dashboard)</span>
-        
-        <div class="d-flex align-items-center">
-          <div id="currentUserBadge" class="badge-contrast badge-dad d-none">
-            <i id="userBadgeIcon" class="bi bi-person-fill"></i>
-            <span id="userBadgeText">User</span>
-          </div>
-        </div>
-
+    <nav id="sidebar" class="sidebar">
+      <div class="sidebar-header"><i class="bi bi-wallet-fill text-primary"></i> <span>Finance Pro</span></div>
+      <ul class="sidebar-menu">
+        <li><a href="javascript:void(0)" class="menu-item active" onclick="switchPage('dashboard', this)"><i class="bi bi-grid-1x2"></i> ภาพรวม (Dashboard)</a></li>
+        <li><a href="javascript:void(0)" class="menu-item" onclick="switchPage('form', this)"><i class="bi bi-pencil-square"></i> บันทึกรายการใหม่</a></li>
+        <li><a href="javascript:void(0)" class="menu-item" onclick="switchPage('settings', this)"><i class="bi bi-gear"></i> ตั้งค่าหมวดหมู่</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <button class="btn btn-light text-danger w-100 fw-bold" onclick="logout()"><i class="bi bi-box-arrow-left me-2"></i>ออกจากระบบ</button>
       </div>
     </nav>
 
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarMenu">
-      <div class="offcanvas-header border-bottom bg-light">
-        <h5 class="offcanvas-title fw-bold text-primary"><i class="bi bi-wallet2 me-2"></i>เมนูหลัก</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
-      </div>
-      <div class="offcanvas-body p-0 pt-3">
-        <div class="list-group list-group-flush border-0">
-          <a href="javascript:void(0)" class="list-group-item list-group-item-action menu-item border-0 active" onclick="switchPage('dashboard', this)"><i class="bi bi-grid-1x2-fill me-3"></i> ภาพรวมครอบครัว</a>
-          <a href="javascript:void(0)" class="list-group-item list-group-item-action menu-item border-0" onclick="switchPage('form', this)"><i class="bi bi-pencil-square me-3"></i> บันทึกรายการใหม่</a>
-          <a href="javascript:void(0)" class="list-group-item list-group-item-action menu-item border-0" onclick="switchPage('settings', this)"><i class="bi bi-gear-fill me-3"></i> จัดการหมวดหมู่</a>
-          <hr class="my-3 mx-3 text-muted">
-          <a href="javascript:void(0)" class="list-group-item list-group-item-action text-danger menu-item border-0" onclick="logout()"><i class="bi bi-box-arrow-left me-3"></i> ออกจากระบบ</a>
-        </div>
-      </div>
-    </div>
-
-    <div id="page-dashboard" class="container mt-4 pb-5">
+    <div class="main-content">
       
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="fw-bold text-secondary mb-0">ข้อมูลประจำเดือนนี้</h6>
-        <select id="viewToggle" class="form-select form-select-sm w-auto border-0 shadow-sm rounded-pill" onchange="updateDashboardView()">
-          <option value="รวมครอบครัว">รวมครอบครัว</option>
-          <option value="พ่อมายู">เฉพาะ พ่อมายู</option>
-          <option value="แม่มายู">เฉพาะ แม่มายู</option>
-        </select>
-      </div>
-
-      <div class="row g-2 mb-3">
-        <div class="col-6 col-md-4"><div class="card card-modern p-2 h-100 d-flex flex-row align-items-center"><div class="icon-box-lg bg-soft-success me-2"><i class="bi bi-plus-circle"></i></div><div><span class="small text-muted">รายรับ</span><h5 class="fw-bold text-success mb-0" id="dashIncome">...</h5></div></div></div>
-        <div class="col-6 col-md-4"><div class="card card-modern p-2 h-100 d-flex flex-row align-items-center"><div class="icon-box-lg bg-soft-danger me-2"><i class="bi bi-dash-circle"></i></div><div><span class="small text-muted">รายจ่าย</span><h5 class="fw-bold text-danger mb-0" id="dashExpense">...</h5></div></div></div>
-        <div class="col-12 col-md-4"><div class="card card-modern p-2 h-100 d-flex flex-row align-items-center"><div class="icon-box-lg bg-soft-primary me-2"><i class="bi bi-bank"></i></div><div><span class="small text-muted">ยอดคงเหลือ</span><h5 class="fw-bold text-primary mb-0" id="dashBalance">...</h5></div></div></div>
-      </div>
-
-      <div class="card card-modern p-3 mb-4 bg-light border-0">
-        <div class="d-flex align-items-center justify-content-between">
-          <span class="fw-bold text-secondarysmall"><i class="bi bi-arrow-left-right text-info me-2"></i> ยอดเงินให้กัน/โอนภายใน</span>
-          <h5 class="fw-bold text-info mb-0" id="dashTransfer">... ฿</h5>
+      <div class="topbar d-flex justify-content-between">
+        <div class="d-flex align-items-center">
+          <button class="btn btn-light d-md-none me-3" onclick="document.getElementById('sidebar').classList.toggle('active')"><i class="bi bi-list fs-4"></i></button>
+          <h5 class="fw-bold mb-0 text-dark" id="pageTitle">ภาพรวมบัญชี</h5>
         </div>
-        <small class="text-muted mt-1" style="font-size: 0.7rem;">* ยอดนี้บันทึกไว้เพื่อดูความเคลื่อนไหว ไม่นำไปคำนวณเป็นรายจ่ายรวมของครอบครัว</small>
+        <div>
+          <div id="currentUserBadge" class="badge-user badge-dad"><i id="userBadgeIcon" class="bi bi-person-fill"></i> <span id="userBadgeText">User</span></div>
+        </div>
       </div>
 
-      <div class="card card-modern p-3"><div class="card-body">
-        <h6 class="fw-bold text-secondary mb-3">แนวโน้มรายรับ - รายจ่าย (6 เดือน)</h6>
-        <div style="position: relative; height: 260px; width: 100%;"><canvas id="trendChart"></canvas></div>
-      </div></div>
-    </div>
-
-    <div id="page-form" class="container mt-4 pb-5 d-none">
-      <div class="card card-modern p-4 mx-auto" style="max-width: 600px;">
-        <h5 class="fw-bold text-primary mb-4"><i class="bi bi-pencil-square me-2"></i>บันทึกข้อมูลใหม่</h5>
-        <form id="transactionForm">
-          <div class="row g-3">
-            <div class="col-12 col-md-6"><label class="form-label text-muted small fw-bold">วันที่</label><input type="date" id="txDate" class="form-control bg-light border-0" required></div>
-            <div class="col-12 col-md-6"><label class="form-label text-muted small fw-bold">ประเภท</label><select id="txType" class="form-select bg-light border-0" onchange="updateCategoryOptionsForm()" required><option value="" disabled selected>-- เลือก --</option><option value="รายจ่าย">รายจ่าย</option><option value="รายรับ">รายรับ</option><option value="โอนภายใน">โอนภายใน (ให้เงินกัน)</option></select></div>
-            <div class="col-12 col-md-6"><label class="form-label text-muted small fw-bold">หมวดหมู่หลัก</label><select id="txCategory" class="form-select bg-light border-0" onchange="updateSubCategoryOptionsForm()" disabled required><option value="" disabled selected>-</option></select></div>
-            <div class="col-12 col-md-6 d-none" id="subCategoryDiv"><label class="form-label text-muted small fw-bold">หมวดหมู่ย่อย</label><select id="txSubCategory" class="form-select bg-light border-0"><option value="">-</option></select></div>
-            <div class="col-12"><label class="form-label text-muted small fw-bold">จำนวนเงิน (บาท)</label><input type="number" id="txAmount" class="form-control form-control-lg text-primary fw-bold bg-light border-0" placeholder="0.00" step="0.01" min="0" required></div>
-            <div class="col-12"><label class="form-label text-muted small fw-bold">หมายเหตุ / สถานที่</label><input type="text" id="txNote" class="form-control bg-light border-0" placeholder="เช่น ซื้อที่ Tops, เติม PTT"></div>
-            <div class="col-12 mt-4"><button type="submit" id="btnSubmitForm" class="btn btn-primary w-100 py-3 fw-bold rounded-pill"><span id="formSpinner" class="spinner-border spinner-border-sm d-none"></span> บันทึกรายการ</button></div>
+      <div class="content-fluid">
+        
+        <div id="page-dashboard">
+          
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h6 class="text-secondary fw-bold mb-0">ข้อมูลประจำเดือนปัจจุบัน</h6>
+            <select id="viewToggle" class="form-select w-auto border-0 shadow-sm fw-bold bg-white" onchange="updateDashboardView()">
+              <option value="รวมครอบครัว">💼 ภาพรวมครอบครัว</option>
+              <option value="พ่อมายู">👨 เฉพาะ พ่อมายู</option>
+              <option value="แม่มายู">👩 เฉพาะ แม่มายู</option>
+            </select>
           </div>
-        </form>
-        <div id="formAlert" class="alert mt-3 d-none text-center small rounded-pill"></div>
-      </div>
-    </div>
 
-    <div id="page-settings" class="container mt-4 pb-5 d-none">
-      <div class="card card-modern p-4 mb-4 border-0 bg-soft-success">
-        <h6 class="fw-bold text-success mb-3"><i class="bi bi-plus-circle-fill me-2"></i>เพิ่มหมวดหมู่ใหม่</h6>
-        <div class="row g-2">
-          <div class="col-12 col-md-3"><select id="newCatType" class="form-select border-0"><option value="รายจ่าย">รายจ่าย</option><option value="รายรับ">รายรับ</option><option value="โอนภายใน">โอนภายใน</option></select></div>
-          <div class="col-12 col-md-4"><input type="text" id="newCatMain" class="form-control border-0" placeholder="หมวดหลัก (เช่น อาหาร)"></div>
-          <div class="col-12 col-md-3"><input type="text" id="newCatSub" class="form-control border-0" placeholder="หมวดย่อย (ถ้ามี)"></div>
-          <div class="col-12 col-md-2"><button class="btn btn-success w-100 fw-bold" onclick="addNewCategory()">เพิ่ม</button></div>
+          <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3"><div class="card card-ent p-3 h-100"><div class="d-flex align-items-center"><div class="icon-box-ent bg-light-success me-3"><i class="bi bi-arrow-down-left"></i></div><div><p class="text-muted small mb-0 fw-bold">รายรับ (ด.)</p><h4 class="fw-bold text-success mb-0" id="dashIncome">0</h4></div></div></div></div>
+            <div class="col-6 col-lg-3"><div class="card card-ent p-3 h-100"><div class="d-flex align-items-center"><div class="icon-box-ent bg-light-danger me-3"><i class="bi bi-arrow-up-right"></i></div><div><p class="text-muted small mb-0 fw-bold">รายจ่าย (ด.)</p><h4 class="fw-bold text-danger mb-0" id="dashExpense">0</h4></div></div></div></div>
+            <div class="col-6 col-lg-3"><div class="card card-ent p-3 h-100"><div class="d-flex align-items-center"><div class="icon-box-ent bg-light-primary me-3"><i class="bi bi-safe"></i></div><div><p class="text-muted small mb-0 fw-bold">คงเหลือ (ด.)</p><h4 class="fw-bold text-primary mb-0" id="dashBalance">0</h4></div></div></div></div>
+            <div class="col-6 col-lg-3"><div class="card card-ent p-3 h-100"><div class="d-flex align-items-center"><div class="icon-box-ent bg-light-info me-3"><i class="bi bi-arrow-left-right"></i></div><div><p class="text-muted small mb-0 fw-bold">ให้กัน/โอนภายใน</p><h4 class="fw-bold text-info mb-0" id="dashTransfer">0</h4></div></div></div></div>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <div class="col-12 col-xl-8">
+              <div class="card card-ent p-4 h-100">
+                <h6 class="fw-bold text-dark mb-4">แนวโน้มรายรับ-รายจ่าย (6 เดือนย้อนหลัง)</h6>
+                <div style="height: 300px; width: 100%;"><canvas id="trendChart"></canvas></div>
+              </div>
+            </div>
+            <div class="col-12 col-xl-4">
+              <div class="card card-ent p-4 h-100">
+                <h6 class="fw-bold text-dark mb-4">สัดส่วนรายจ่ายเดือนนี้</h6>
+                <div style="height: 250px; width: 100%; position: relative;"><canvas id="categoryChart"></canvas></div>
+                <div id="noCatDataMsg" class="text-center text-muted small mt-3 d-none">ยังไม่มีข้อมูลรายจ่ายในเดือนนี้</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-ent p-4">
+            <h6 class="fw-bold text-dark mb-4">รายการล่าสุด 5 รายการ</h6>
+            <div class="table-responsive">
+              <table class="table table-ent table-hover mb-0">
+                <thead><tr><th>วันที่</th><th>หมวดหมู่</th><th>หมายเหตุ</th><th>ผู้บันทึก</th><th class="text-end">ยอดเงิน</th></tr></thead>
+                <tbody id="recentTxBody">
+                  <tr><td colspan="5" class="text-center py-3 text-muted">กำลังโหลดข้อมูล...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div> <div id="page-form" class="d-none">
+          <div class="card card-ent p-4 mx-auto" style="max-width: 650px;">
+            <h5 class="fw-bold text-primary mb-4"><i class="bi bi-plus-circle-fill me-2"></i>บันทึกรายการใหม่</h5>
+            <form id="transactionForm">
+              <div class="row g-3">
+                <div class="col-12 col-md-6"><label class="form-label text-muted small fw-bold">วันที่</label><input type="date" id="txDate" class="form-control bg-light border-0 py-2" required></div>
+                <div class="col-12 col-md-6"><label class="form-label text-muted small fw-bold">ประเภท</label><select id="txType" class="form-select bg-light border-0 py-2" onchange="updateCategoryOptionsForm()" required><option value="" disabled selected>-- เลือก --</option><option value="รายจ่าย">รายจ่าย</option><option value="รายรับ">รายรับ</option><option value="โอนภายใน">โอนภายใน (ให้เงินกัน)</option></select></div>
+                <div class="col-12 col-md-6"><label class="form-label text-muted small fw-bold">หมวดหมู่หลัก</label><select id="txCategory" class="form-select bg-light border-0 py-2" onchange="updateSubCategoryOptionsForm()" disabled required><option value="" disabled selected>-</option></select></div>
+                <div class="col-12 col-md-6 d-none" id="subCategoryDiv"><label class="form-label text-muted small fw-bold">หมวดหมู่ย่อย</label><select id="txSubCategory" class="form-select bg-light border-0 py-2"><option value="">-</option></select></div>
+                <div class="col-12"><label class="form-label text-muted small fw-bold">จำนวนเงิน (บาท)</label><input type="number" id="txAmount" class="form-control form-control-lg text-primary fw-bold bg-light border-0" placeholder="0.00" step="0.01" min="0" required></div>
+                <div class="col-12"><label class="form-label text-muted small fw-bold">หมายเหตุ / สถานที่</label><input type="text" id="txNote" class="form-control bg-light border-0 py-2" placeholder="ระบุรายละเอียดเพิ่มเติม"></div>
+                <div class="col-12 mt-4"><button type="submit" id="btnSubmitForm" class="btn btn-primary w-100 py-3 fw-bold rounded-3"><span id="formSpinner" class="spinner-border spinner-border-sm d-none"></span> ยืนยันการบันทึก</button></div>
+              </div>
+            </form>
+            <div id="formAlert" class="alert mt-3 d-none text-center small rounded-3"></div>
+          </div>
         </div>
-      </div>
-      <div class="card card-modern p-0 overflow-hidden">
-        <div class="p-3 bg-light border-bottom"><h6 class="fw-bold text-secondary mb-0"><i class="bi bi-list-ul me-2"></i>หมวดหมู่ในระบบปัจจุบัน</h6></div>
-        <div class="table-responsive"><table class="table table-hover table-striped mb-0" style="font-size: 0.9rem;"><thead class="table-light"><tr><th class="ps-3">ประเภท</th><th>หมวดหลัก</th><th>หมวดย่อย</th><th class="text-center">จัดการ</th></tr></thead><tbody id="catTableBody"></tbody></table></div>
-      </div>
-    </div>
 
-    <div class="modal fade" id="editCategoryModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal-content border-0 shadow-lg" style="border-radius: 20px;"><div class="modal-header bg-light border-0 pt-3 pb-2"><h6 class="modal-title fw-bold">แก้ไขหมวดหมู่</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body p-3"><input type="hidden" id="editOldType"><input type="hidden" id="editOldCat"><input type="hidden" id="editOldSub"><div class="mb-2"><label class="form-label text-muted small fw-bold mb-1">ประเภท</label><select id="editNewType" class="form-select form-select-sm bg-light border-0"><option value="รายจ่าย">รายจ่าย</option><option value="รายรับ">รายรับ</option><option value="โอนภายใน">โอนภายใน</option></select></div><div class="mb-2"><label class="form-label text-muted small fw-bold mb-1">หมวดหลัก</label><input type="text" id="editNewCat" class="form-control form-control-sm bg-light border-0"></div><div class="mb-3"><label class="form-label text-muted small fw-bold mb-1">หมวดย่อย</label><input type="text" id="editNewSub" class="form-control form-control-sm bg-light border-0"></div><button type="button" class="btn btn-primary btn-sm w-100 rounded-pill fw-bold" onclick="saveEditCategory()">บันทึก</button></div></div></div></div>
+        <div id="page-settings" class="d-none">
+          <div class="card card-ent p-4 mb-4 bg-light-success">
+            <h6 class="fw-bold text-success mb-3"><i class="bi bi-plus-circle-fill me-2"></i>สร้างหมวดหมู่ใหม่</h6>
+            <div class="row g-2">
+              <div class="col-12 col-md-3"><select id="newCatType" class="form-select border-0 py-2"><option value="รายจ่าย">รายจ่าย</option><option value="รายรับ">รายรับ</option><option value="โอนภายใน">โอนภายใน</option></select></div>
+              <div class="col-12 col-md-4"><input type="text" id="newCatMain" class="form-control border-0 py-2" placeholder="หมวดหลัก (เช่น อาหาร)"></div>
+              <div class="col-12 col-md-3"><input type="text" id="newCatSub" class="form-control border-0 py-2" placeholder="หมวดย่อย (ถ้ามี)"></div>
+              <div class="col-12 col-md-2"><button class="btn btn-success w-100 fw-bold py-2" onclick="addNewCategory()">เพิ่ม</button></div>
+            </div>
+          </div>
+          <div class="card card-ent p-0 overflow-hidden">
+            <div class="p-4 bg-white border-bottom"><h6 class="fw-bold text-dark mb-0">หมวดหมู่ทั้งหมดในระบบ</h6></div>
+            <div class="table-responsive"><table class="table table-ent table-hover mb-0"><thead class="table-light"><tr><th class="ps-4">ประเภท</th><th>หมวดหลัก</th><th>หมวดย่อย</th><th class="text-center pe-4">จัดการ</th></tr></thead><tbody id="catTableBody"></tbody></table></div>
+          </div>
+        </div>
+
+      </div> </div> <div class="modal fade" id="editCategoryModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered modal-sm"><div class="modal-content border-0 shadow-lg" style="border-radius: 20px;"><div class="modal-header bg-light border-0 pt-3 pb-2"><h6 class="modal-title fw-bold">แก้ไขหมวดหมู่</h6><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body p-4"><input type="hidden" id="editOldType"><input type="hidden" id="editOldCat"><input type="hidden" id="editOldSub"><div class="mb-2"><label class="form-label text-muted small fw-bold mb-1">ประเภท</label><select id="editNewType" class="form-select bg-light border-0"><option value="รายจ่าย">รายจ่าย</option><option value="รายรับ">รายรับ</option><option value="โอนภายใน">โอนภายใน</option></select></div><div class="mb-2"><label class="form-label text-muted small fw-bold mb-1">หมวดหลัก</label><input type="text" id="editNewCat" class="form-control bg-light border-0"></div><div class="mb-4"><label class="form-label text-muted small fw-bold mb-1">หมวดย่อย</label><input type="text" id="editNewSub" class="form-control bg-light border-0"></div><button type="button" class="btn btn-primary w-100 rounded-pill fw-bold" onclick="saveEditCategory()">บันทึกการเปลี่ยนแปลง</button></div></div></div></div>
 
   </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <script>
     // ==========================================
-    // 🔴 🔴 ตั้งค่า API URL ตรงนี้ 🔴 🔴
+    // 🔴 ใส่ URL ของ GOOGLE APPS SCRIPT ตรงนี้ 🔴
     // ==========================================
     const API_URL = "https://script.google.com/macros/s/AKfycbzafKzrHPwKIY31r0_BkDT1O9pwDqa7QKsa9pZcbQflU2oJotzDA2janKaNN5QKBX09/exec";
 
-    // Variables
     let currentUser = "";
     let categoriesData = {};
     let dashboardDataCache = {};
@@ -206,46 +214,29 @@
     let trendChartInstance = null;
     let categoryChartInstance = null;
 
-    // Loading Utility
     function toggleLoading(show) { document.getElementById('loadingOverlay').classList.toggle('d-none', !show); }
-
-    // วันที่ปัจจุบัน
     document.getElementById('txDate').valueAsDate = new Date();
 
-    // CORS Bypass call
     async function callAPI(action, payload) {
       try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: action, payload: payload })
-        });
+        const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: action, payload: payload }) });
         return await response.json();
-      } catch (error) {
-        console.error("API Error:", error);
-        return { success: false, message: "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ครับ" };
-      }
+      } catch (error) { console.error("API Error:", error); return { success: false, message: "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ครับ" }; }
     }
 
-    // Enter ดักจับ PIN
-    function checkEnter(event) { if (event.key === "Enter") doLogin(); }
-
-    // 1. ระบบ Login แยกคน
+    // --- Login Logic ---
     function selectUser(user) {
       currentUser = user;
       document.getElementById('btnDad').classList.toggle('active', user === 'พ่อมายู');
       document.getElementById('btnMom').classList.toggle('active', user === 'แม่มายู');
       document.getElementById('pin-section').classList.remove('d-none');
       document.getElementById('loginAlert').classList.add('d-none');
-      document.getElementById('pinInput').value = '';
-      document.getElementById('pinInput').focus();
+      document.getElementById('pinInput').value = ''; document.getElementById('pinInput').focus();
     }
 
     async function doLogin() {
-      const pin = document.getElementById('pinInput').value;
-      const btn = document.getElementById('btnLogin');
+      const pin = document.getElementById('pinInput').value; const btn = document.getElementById('btnLogin');
       if(!pin || !currentUser) return;
-      
       btn.disabled = true; btn.textContent = '...กำลังตรวจสอบ';
       const res = await callAPI("login", { user: currentUser, pass: pin });
       btn.disabled = false; btn.textContent = 'เข้าสู่ระบบ';
@@ -254,34 +245,22 @@
         document.getElementById('login-section').classList.add('d-none');
         document.getElementById('app-section').classList.remove('d-none');
         
-        // อัปเดตป้ายชื่อ User ให้ลอยเด่นตามที่แก้ใหม่
         const badgeObj = document.getElementById('currentUserBadge');
-        const badgeIcon = document.getElementById('userBadgeIcon');
-        const badgeText = document.getElementById('userBadgeText');
+        document.getElementById('userBadgeText').textContent = currentUser;
         
-        badgeText.textContent = currentUser;
-        badgeObj.classList.remove('d-none'); // แสดงป้ายชื่อ
-        
-        if (currentUser === 'พ่อมายู') {
-          badgeObj.className = 'badge-contrast badge-dad';
-          badgeIcon.className = 'bi bi-person-standing';
-        } else {
-          badgeObj.className = 'badge-contrast badge-mom';
-          badgeIcon.className = 'bi bi-person-standing-dress';
-        }
+        if (currentUser === 'พ่อมายู') { badgeObj.className = 'badge-user badge-dad'; document.getElementById('userBadgeIcon').className = 'bi bi-person-standing'; } 
+        else { badgeObj.className = 'badge-user badge-mom'; document.getElementById('userBadgeIcon').className = 'bi bi-person-standing-dress'; }
 
         initApp(); 
       } else {
-        const alertBox = document.getElementById('loginAlert');
-        alertBox.textContent = res.message; alertBox.classList.remove('d-none');
+        const alertBox = document.getElementById('loginAlert'); alertBox.textContent = res.message; alertBox.classList.remove('d-none');
       }
     }
-
     function logout() { location.reload(); }
 
-    // 2. ระบบสลับหน้า SPA
+    // --- Navigation Logic ---
     function switchPage(page, el) {
-      const bsOffcanvas = bootstrap.Offcanvas.getInstance(document.getElementById('sidebarMenu')); if (bsOffcanvas) bsOffcanvas.hide();
+      if(window.innerWidth < 768) document.getElementById('sidebar').classList.remove('active'); // ปิดเมนูบนมือถือเวลาเปลี่ยนหน้า
       document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
       if(el) el.classList.add('active');
 
@@ -290,47 +269,67 @@
       document.getElementById('page-settings').classList.add('d-none');
 
       if(page === 'dashboard') {
-        document.getElementById('pageTitle').textContent = 'ภาพรวมครอบครัว';
+        document.getElementById('pageTitle').textContent = 'ภาพรวมบัญชี';
         document.getElementById('page-dashboard').classList.remove('d-none');
         updateDashboardView();
       } else if (page === 'form') {
         document.getElementById('pageTitle').textContent = 'บันทึกรายการ';
         document.getElementById('page-form').classList.remove('d-none');
       } else if (page === 'settings') {
-        document.getElementById('pageTitle').textContent = 'จัดการหมวดหมู่';
+        document.getElementById('pageTitle').textContent = 'ตั้งค่าหมวดหมู่';
         document.getElementById('page-settings').classList.remove('d-none');
       }
     }
 
-    // 3. เริ่มต้น App
+    // --- Init App ---
     async function initApp() {
       toggleLoading(show=true);
       const res = await callAPI("getAppData", {});
       toggleLoading(show=false);
       if(res.success) {
-        categoriesData = res.categories;
-        dashboardDataCache = res.dashboard;
-        renderCategoryTable();
-        updateDashboardView();
+        categoriesData = res.categories; dashboardDataCache = res.dashboard;
+        renderCategoryTable(); updateDashboardView();
       }
     }
 
-    // ==========================================
-    // Dashboard & Chart
-    // ==========================================
+    // --- Dashboard & Charts (อัปเกรด Enterprise) ---
     function updateDashboardView() {
       const view = document.getElementById('viewToggle').value;
       const data = dashboardDataCache[view];
-      
       if(!data) return;
 
+      // Update Number Cards
       document.getElementById('dashIncome').textContent = data.income.toLocaleString();
       document.getElementById('dashExpense').textContent = data.expense.toLocaleString();
       document.getElementById('dashBalance').textContent = data.balance.toLocaleString();
       document.getElementById('dashTransfer').textContent = data.transfer.toLocaleString();
       
-      document.getElementById('dashBalance').className = `fw-bold mb-0 ${data.balance >= 0 ? 'text-primary' : 'text-danger'}`;
+      // Update Recent Transactions Table
+      let recentHTML = '';
+      if(data.recent.length === 0) {
+        recentHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">ยังไม่มีรายการบันทึก</td></tr>';
+      } else {
+        data.recent.forEach(tx => {
+          let isInc = tx.type === 'รายรับ';
+          let isTrf = tx.type === 'โอนภายใน';
+          let icon = isInc ? '<i class="bi bi-arrow-down-left-circle text-success me-2"></i>' : isTrf ? '<i class="bi bi-arrow-left-right text-info me-2"></i>' : '<i class="bi bi-arrow-up-right-circle text-danger me-2"></i>';
+          let amountColor = isInc ? 'text-success' : isTrf ? 'text-info' : 'text-danger';
+          let prefix = isInc ? '+' : isTrf ? '' : '-';
+          let badgeColor = tx.user === 'พ่อมายู' ? 'bg-primary' : tx.user === 'แม่มายู' ? 'bg-danger' : 'bg-secondary';
+          
+          recentHTML += `
+            <tr>
+              <td class="text-muted small">${tx.date}</td>
+              <td class="fw-bold">${icon}${tx.category} <span class="text-muted small fw-normal">${tx.sub ? '('+tx.sub+')' : ''}</span></td>
+              <td class="text-muted small">${tx.note || '-'}</td>
+              <td><span class="badge ${badgeColor} rounded-pill" style="font-size: 0.65rem;">${tx.user}</span></td>
+              <td class="text-end fw-bold ${amountColor}">${prefix}${tx.amount.toLocaleString()} ฿</td>
+            </tr>`;
+        });
+      }
+      document.getElementById('recentTxBody').innerHTML = recentHTML;
 
+      // Update Bar Chart (Trend)
       const ctxTrend = document.getElementById('trendChart').getContext('2d');
       if(trendChartInstance) trendChartInstance.destroy();
       trendChartInstance = new Chart(ctxTrend, {
@@ -338,124 +337,79 @@
         data: {
           labels: dashboardDataCache.labelsTrend,
           datasets: [
-            { label: 'รายรับ', data: data.trendInc, backgroundColor: 'rgba(25, 135, 84, 0.7)', borderRadius: 5 },
-            { label: 'รายจ่าย', data: data.trendExp, backgroundColor: 'rgba(220, 53, 69, 0.7)', borderRadius: 5 }
+            { label: 'รายรับ', data: data.trendInc, backgroundColor: '#2e7d32', borderRadius: 4, barPercentage: 0.6 },
+            { label: 'รายจ่าย', data: data.trendExp, backgroundColor: '#c62828', borderRadius: 4, barPercentage: 0.6 }
           ]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: {size: 11}} } }, scales: { y: { beginAtZero: true, grid: {display: false} }, x: { grid: {display: false} } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8 } } }, scales: { y: { beginAtZero: true, grid: { borderDash: [2, 4], color: '#f1f1f1' } }, x: { grid: { display: false } } } }
       });
+
+      // Update Doughnut Chart (Category Breakdown)
+      const ctxCat = document.getElementById('categoryChart').getContext('2d');
+      if(categoryChartInstance) categoryChartInstance.destroy();
+      
+      const msgNoData = document.getElementById('noCatDataMsg');
+      if(data.catLabels.length === 0) {
+        msgNoData.classList.remove('d-none');
+      } else {
+        msgNoData.classList.add('d-none');
+        const colors = ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#dc3545', '#fd7e14', '#ffc107', '#198754', '#20c997', '#0dcaf0'];
+        categoryChartInstance = new Chart(ctxCat, {
+          type: 'doughnut',
+          data: { labels: data.catLabels, datasets: [{ data: data.catValues, backgroundColor: colors, borderWidth: 2, hoverOffset: 5 }] },
+          options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right', labels: { usePointStyle: true, boxWidth: 8, font: {size: 11} } } } }
+        });
+      }
     }
 
-    // ==========================================
-    // Dynamic Form บันทึกรายการ
-    // ==========================================
+    // --- Form Logic ---
     function updateCategoryOptionsForm() {
-      const type = document.getElementById('txType').value;
-      const catSelect = document.getElementById('txCategory');
-      catSelect.innerHTML = '<option value="" disabled selected>-- เลือกหมวดหลัก --</option>';
-      document.getElementById('subCategoryDiv').classList.add('d-none');
-      if(type && categoriesData[type]) {
-        catSelect.disabled = false;
-        for (const cat in categoriesData[type]) { const opt = document.createElement('option'); opt.value = cat; opt.textContent = cat; catSelect.appendChild(opt); }
-      } else { catSelect.disabled = true; }
+      const type = document.getElementById('txType').value; const catSelect = document.getElementById('txCategory');
+      catSelect.innerHTML = '<option value="" disabled selected>-- เลือกหมวดหลัก --</option>'; document.getElementById('subCategoryDiv').classList.add('d-none');
+      if(type && categoriesData[type]) { catSelect.disabled = false; for (const cat in categoriesData[type]) { const opt = document.createElement('option'); opt.value = cat; opt.textContent = cat; catSelect.appendChild(opt); } } else { catSelect.disabled = true; }
     }
-
     function updateSubCategoryOptionsForm() {
-      const type = document.getElementById('txType').value;
-      const cat = document.getElementById('txCategory').value;
-      const subCatSelect = document.getElementById('txSubCategory');
-      const subCategoryDiv = document.getElementById('subCategoryDiv');
+      const type = document.getElementById('txType').value; const cat = document.getElementById('txCategory').value; const subCatSelect = document.getElementById('txSubCategory'); const subCategoryDiv = document.getElementById('subCategoryDiv');
       subCatSelect.innerHTML = '<option value="" selected>-- หมวดย่อย (ถ้ามี) --</option>';
-      if (type && cat && categoriesData[type][cat] && categoriesData[type][cat].length > 0) {
-        subCategoryDiv.classList.remove('d-none');
-        categoriesData[type][cat].forEach(subCat => { const opt = document.createElement('option'); opt.value = subCat; opt.textContent = subCat; subCatSelect.appendChild(opt); });
-      } else { subCategoryDiv.classList.add('d-none'); }
+      if (type && cat && categoriesData[type][cat] && categoriesData[type][cat].length > 0) { subCategoryDiv.classList.remove('d-none'); categoriesData[type][cat].forEach(subCat => { const opt = document.createElement('option'); opt.value = subCat; opt.textContent = subCat; subCatSelect.appendChild(opt); }); } else { subCategoryDiv.classList.add('d-none'); }
     }
 
     document.getElementById('transactionForm').addEventListener('submit', async function(e) {
       e.preventDefault(); 
-      const btn = document.getElementById('btnSubmitForm');
-      const alertBox = document.getElementById('formAlert');
-      
+      const btn = document.getElementById('btnSubmitForm'); const alertBox = document.getElementById('formAlert');
       btn.disabled = true; document.getElementById('formSpinner').classList.remove('d-none'); alertBox.classList.add('d-none');
-
-      const payload = {
-        date: document.getElementById('txDate').value, type: document.getElementById('txType').value,
-        category: document.getElementById('txCategory').value, subCategory: document.getElementById('txSubCategory').value || '',
-        amount: document.getElementById('txAmount').value, note: document.getElementById('txNote').value || '',
-        user: currentUser
-      };
-
+      const payload = { date: document.getElementById('txDate').value, type: document.getElementById('txType').value, category: document.getElementById('txCategory').value, subCategory: document.getElementById('txSubCategory').value || '', amount: document.getElementById('txAmount').value, note: document.getElementById('txNote').value || '', user: currentUser };
       const res = await callAPI("addTransaction", payload);
-      
       btn.disabled = false; document.getElementById('formSpinner').classList.add('d-none');
       if(res.success) {
-        alertBox.className = 'alert mt-3 alert-success py-2 text-center small rounded-pill';
-        alertBox.innerHTML = '<i class="bi bi-check-circle-fill"></i> บันทึกรายการสำเร็จ!';
-        alertBox.classList.remove('d-none');
+        alertBox.className = 'alert mt-3 alert-success py-2 text-center small rounded-3'; alertBox.innerHTML = '<i class="bi bi-check-circle-fill"></i> บันทึกรายการสำเร็จ!'; alertBox.classList.remove('d-none');
         document.getElementById('txAmount').value = ''; document.getElementById('txNote').value = '';
         setTimeout(() => alertBox.classList.add('d-none'), 3000);
-        
-        callAPI("getDashboard", {}).then(r => { if(r.success) { dashboardDataCache = r.data; updateDashboardView(); }});
+        callAPI("getAppData", {}).then(r => { if(r.success) { dashboardDataCache = r.dashboard; updateDashboardView(); }});
       }
     });
 
-    // ==========================================
-    // Manage Categories (Dynamic)
-    // ==========================================
+    // --- Categories Logic ---
     function renderCategoryTable() {
       let tbody = '';
       for(let type in categoriesData) {
         for(let cat in categoriesData[type]) {
           let typeBadge = type === 'รายรับ' ? 'bg-success' : type === 'รายจ่าย' ? 'bg-danger' : 'bg-info';
           if(categoriesData[type][cat].length === 0) {
-             tbody += `<tr><td class="ps-3"><span class="badge ${typeBadge} small">${type}</span></td><td class="fw-bold text-dark">${cat}</td><td class="text-muted">-</td><td class="text-center text-nowrap"><button class="btn btn-sm btn-light text-warning py-0 me-1 shadow-sm" onclick="openEditModal('${type}','${cat}','')"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-light text-danger py-0 shadow-sm" onclick="deleteCategory('${type}','${cat}','')"><i class="bi bi-trash-fill"></i></button></td></tr>`;
+             tbody += `<tr><td class="ps-4"><span class="badge ${typeBadge}">${type}</span></td><td class="fw-bold text-dark">${cat}</td><td class="text-muted">-</td><td class="text-center pe-4"><button class="btn btn-sm btn-light text-warning shadow-sm me-1" onclick="openEditModal('${type}','${cat}','')"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-light text-danger shadow-sm" onclick="deleteCategory('${type}','${cat}','')"><i class="bi bi-trash-fill"></i></button></td></tr>`;
           } else {
              categoriesData[type][cat].forEach(sub => {
-                tbody += `<tr><td class="ps-3"><span class="badge ${typeBadge} small">${type}</span></td><td class="fw-bold text-dark">${cat}</td><td>${sub}</td><td class="text-center text-nowrap"><button class="btn btn-sm btn-light text-warning py-0 me-1 shadow-sm" onclick="openEditModal('${type}','${cat}','${sub}')"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-light text-danger py-0 shadow-sm" onclick="deleteCategory('${type}','${cat}','${sub}')"><i class="bi bi-trash-fill"></i></button></td></tr>`;
+                tbody += `<tr><td class="ps-4"><span class="badge ${typeBadge}">${type}</span></td><td class="fw-bold text-dark">${cat}</td><td>${sub}</td><td class="text-center pe-4"><button class="btn btn-sm btn-light text-warning shadow-sm me-1" onclick="openEditModal('${type}','${cat}','${sub}')"><i class="bi bi-pencil-fill"></i></button><button class="btn btn-sm btn-light text-danger shadow-sm" onclick="deleteCategory('${type}','${cat}','${sub}')"><i class="bi bi-trash-fill"></i></button></td></tr>`;
              });
           }
         }
-      }
-      document.getElementById('catTableBody').innerHTML = tbody;
+      } document.getElementById('catTableBody').innerHTML = tbody;
     }
 
-    async function addNewCategory() {
-      const type = document.getElementById('newCatType').value; const cat = document.getElementById('newCatMain').value.trim(); const sub = document.getElementById('newCatSub').value.trim();
-      if(!cat) return alert("กรุณากรอกหมวดหลักครับ");
-      toggleLoading(true);
-      const res = await callAPI("addCategory", { type: type, cat: cat, sub: sub });
-      toggleLoading(false);
-      if(res.success) { categoriesData = res.categories; renderCategoryTable(); document.getElementById('newCatMain').value = ''; document.getElementById('newCatSub').value = ''; }
-    }
-
-    async function deleteCategory(type, cat, sub) {
-      if(confirm(`ลบหมวดหมู่: ${cat} ${sub ? '('+sub+')' : ''} ?`)) {
-        toggleLoading(true);
-        const res = await callAPI("deleteCategory", { type: type, cat: cat, sub: sub });
-        toggleLoading(false);
-        if(res.success) { categoriesData = res.categories; renderCategoryTable(); }
-      }
-    }
-
-    function openEditModal(type, cat, sub) {
-      document.getElementById('editOldType').value = type; document.getElementById('editOldCat').value = cat; document.getElementById('editOldSub').value = sub || '';
-      document.getElementById('editNewType').value = type; document.getElementById('editNewCat').value = cat; document.getElementById('editNewSub').value = sub || '';
-      if (!editModalInstance) editModalInstance = new bootstrap.Modal(document.getElementById('editCategoryModal'));
-      editModalInstance.show();
-    }
-
-    async function saveEditCategory() {
-      const payload = {
-        oldType: document.getElementById('editOldType').value, oldCat: document.getElementById('editOldCat').value, oldSub: document.getElementById('editOldSub').value,
-        newType: document.getElementById('editNewType').value, newCat: document.getElementById('editNewCat').value.trim(), newSub: document.getElementById('editNewSub').value.trim()
-      };
-      if(!payload.newCat) return;
-      editModalInstance.hide(); toggleLoading(true);
-      const res = await callAPI("editCategory", payload);
-      toggleLoading(false);
-      if(res.success) { categoriesData = res.categories; renderCategoryTable(); }
-    }
+    async function addNewCategory() { const type = document.getElementById('newCatType').value; const cat = document.getElementById('newCatMain').value.trim(); const sub = document.getElementById('newCatSub').value.trim(); if(!cat) return alert("กรุณากรอกหมวดหลัก"); toggleLoading(true); const res = await callAPI("addCategory", { type: type, cat: cat, sub: sub }); toggleLoading(false); if(res.success) { categoriesData = res.categories; renderCategoryTable(); document.getElementById('newCatMain').value = ''; document.getElementById('newCatSub').value = ''; } }
+    async function deleteCategory(type, cat, sub) { if(confirm(`ลบหมวดหมู่: ${cat} ${sub ? '('+sub+')' : ''} ?`)) { toggleLoading(true); const res = await callAPI("deleteCategory", { type: type, cat: cat, sub: sub }); toggleLoading(false); if(res.success) { categoriesData = res.categories; renderCategoryTable(); } } }
+    function openEditModal(type, cat, sub) { document.getElementById('editOldType').value = type; document.getElementById('editOldCat').value = cat; document.getElementById('editOldSub').value = sub || ''; document.getElementById('editNewType').value = type; document.getElementById('editNewCat').value = cat; document.getElementById('editNewSub').value = sub || ''; if (!editModalInstance) editModalInstance = new bootstrap.Modal(document.getElementById('editCategoryModal')); editModalInstance.show(); }
+    async function saveEditCategory() { const payload = { oldType: document.getElementById('editOldType').value, oldCat: document.getElementById('editOldCat').value, oldSub: document.getElementById('editOldSub').value, newType: document.getElementById('editNewType').value, newCat: document.getElementById('editNewCat').value.trim(), newSub: document.getElementById('editNewSub').value.trim() }; if(!payload.newCat) return; editModalInstance.hide(); toggleLoading(true); const res = await callAPI("editCategory", payload); toggleLoading(false); if(res.success) { categoriesData = res.categories; renderCategoryTable(); } }
   </script>
 </body>
 </html>
